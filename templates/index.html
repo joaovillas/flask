@@ -12,6 +12,30 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>  
+
+<script>
+$(document).ready(function(){
+    $("#search").typeahead({
+        source:function(query,result){
+            $.ajax({
+                url:"http://localhost:5000/entities/search="+query,
+                method:"GET",
+                success:function(data){
+                    result($.map(data,function(item){
+                        return item
+                    })
+                    );
+                }
+            })
+        },
+        displayText: function(item){ return item.type;}
+    });  
+});
+
+
+</script>
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 <div class="container">
@@ -25,12 +49,13 @@
                                     </div>
                                     <!--end of col-->
                                     <div class="col">
-                                        <input class="form-control form-control-lg form-control-borderless" type="search" placeholder="Search for Titles">
+                                        <input class="form-control form-control-lg form-control-borderless" id="search" type="search" autocomplete="off"placeholder="Search for Titles">
                                     </div>
                                     <!--end of col-->
                                     <div class="col-auto">
                                         <button class="btn btn-lg btn-success" >Search</button>
                                     </div>
+                                    <ul class="list-group" id="result"></ul>
                                     <!--end of col-->
                                 </div>
                             </form>
